@@ -9,6 +9,7 @@ const pageLength = 25;
 movieRouter.get('/:page(\\d+)?', async function(req, res) {
     const page = req.params.page;
     const sort = req.query.sort;
+    const search = req.query.search;
     let offset = 0;
     if(page && page > 0) {
         offset = pageLength * (page - 1);
@@ -26,15 +27,25 @@ movieRouter.get('/:page(\\d+)?', async function(req, res) {
         }
     }
     // console.log(sortData);
+    const searchQuery= search ? { title: new RegExp(search, 'i') } : {}
 
+    const coll = db.collection('movies')
     const records = await db.collection('movies').find(
-        {}, { 
+        searchQuery, { 
             sort: sortData,
             limit: pageLength,
             skip: offset
         }
     ).toArray();
-    const total = await db.collection('movies').count();
+
+    records.map((rec) => {
+        if(!rec.lastWatched) {
+            rec.lastWatched = new Date('1900-01-01')
+        }
+    })
+    // const records = await cursor.toArray();
+    // console.log(records)
+    const total = await db.collection('movies').count(searchQuery);
 
     res.send({movies: records, total: total});
 })
@@ -66,14 +77,43 @@ movieRouter.get('/getMovie/:movieId(\\d+)', async function(req, res) {
     }
 })
 
-movieRouter.get('/find/:title', function(req, res) {
+movieRouter.get('/find/:title?', async function(req, res) {
     const { title } = req.params;
-    moviedb
-        .searchMovie({ query: title })
-        .then((response) => {
-            res.send(response)
-        })
-        .catch(console.error)
+    if(title) {
+        moviedb
+            .searchMovie({ query: title, include_adult: false, region: 'US' })
+            .then(async (response) => {
+                const movieIds = []
+                response.results.map((movie) => {
+                    movieIds.push(movie.id)
+                })
+                const existingMoviesArray = await db.collection('movies').find(
+                    { id: { $in: movieIds } },
+                    { sort: { id: 1 }})
+                    .project({ id: 1, _id: 0 })
+                .toArray();
+                const existingMovies = existingMoviesArray.flatMap((elem) => elem.id)
+                response.existing = existingMovies
+                res.send(response)
+            })
+            .catch(console.error)
+    } else {
+        res.send([])
+    }
 })
+
+movieRouter.put('/addMovie', async (req, res) => {
+    const movie = req.body;
+    console.log(movie)
+
+    try {
+        const newRecord = await db.collection('movies').insertOne(movie);
+    } catch(e) {
+        res.send({updated: false, error: e.message})
+    }
+
+    res.send({updated: true});
+});
+
 
 export default movieRouter;
