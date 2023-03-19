@@ -45,10 +45,11 @@ const MovieListItem = (props) => {
 
     const handleAddItem = async (event) => {
         const movieId = event.target.dataset.id;
+        const whoAmI = localStorage.getItem('moviesuser');
         await axios.get(`/api/movies/getMovie/${movieId}`)
         .then(async (response) => {
             let movieInfo = response.data
-            movieInfo = { ...movieInfo, chosenBy: '', added: new Date() }
+            movieInfo = { ...movieInfo, chosenBy: whoAmI || '', added: new Date() }
             console.log(movieInfo)
             const result = await axios.put('/api/movies/addMovie', movieInfo)
             return result.data;

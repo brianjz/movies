@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import EasyEdit, {Types} from 'react-easy-edit';
 
 const StyledNavBar = styled.div`
     ${({ theme }) => theme.mixins.flexBetween};
@@ -28,6 +29,8 @@ const StyledNav = styled.ul`
             margin-left: 15px;
             color: var(--slate)
         }
+
+        div { display: inline; }
     }
 
     @media (max-width: 1080px) {
@@ -111,12 +114,18 @@ const StyledSiteName = styled.div`
     }
 `;
 
+const handleUserSet = (value) => {
+    localStorage.setItem('moviesuser', value);
+}
+
 const NavBar = () => {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
     const toggleHamburger = () => {
         setHamburgerOpen(!hamburgerOpen)
     }
+
+    const whoAmI = localStorage.getItem('moviesuser');
 
     return (
         <StyledNavBar id="navBar">
@@ -129,6 +138,14 @@ const NavBar = () => {
                 <Link className="inline-link" to="/">Movies</Link>
             </StyledSiteName>
             <StyledNav dropMenuOpen={hamburgerOpen ? true : false } onClick={toggleHamburger}>
+                <li>
+                    <EasyEdit
+                        type={Types.TEXT}
+                        value={whoAmI || "Who Are You?"}
+                        onSave={handleUserSet}
+                        saveButtonLabel="Save"
+                    />
+                </li>
                 <li><Link className="inline-link" to="/">Movie List</Link></li>
                 <li><Link className="inline-link" to="/movie/add">Add Movie</Link></li>
             </StyledNav>
