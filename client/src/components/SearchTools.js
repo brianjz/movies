@@ -23,6 +23,11 @@ const StyledSearch = styled.form`
         padding: 10px 20px;
         cursor: pointer;
     }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+
 `;
 
 const StyledClearSearch = styled.div`
@@ -31,8 +36,14 @@ const StyledClearSearch = styled.div`
     top: 0px;
     font-size: 2rem;
     color: #666;
-    transform: rotate(45deg) scale(1.2);
     cursor: pointer;
+
+    @media (max-width: 768px) {
+        right: 8px;
+        left: initial;
+    }
+
+    transform: rotate(45deg) scale(1.2);
 `;
 
 const SearchTools = (props) => {
@@ -41,12 +52,12 @@ const SearchTools = (props) => {
             <input type="text" id="searchBox" name="searchBox" value={props.curSearchTerm} placeholder="Search for movie" onChange={props.onSearchChange}/>
             {props.curSearchTerm && <StyledClearSearch onClick={props.onClearSearch}>+</StyledClearSearch>}
             <select onChange={props.onSortBy} value={props.curSort}>
-                <option value="-popularity">Popularity</option>
+                <option value="-vote_average">Popularity</option>
                 <option value="-release_date">Release Date</option>
                 <option value="title">Title</option>
                 {props.page && <option value="-lastWatched">Last Watched</option>}
             </select>
-            <input type="submit" value="Search" />
+            <input type="submit" value={props.page ? "Filter" : "Search"} />
         </StyledSearch>
     )
 }

@@ -1,27 +1,9 @@
-import { MongoClient } from 'mongodb';
-import * as dotenv from 'dotenv';
-const result = dotenv.config()
+import mongoose from 'mongoose'
 
-// console.log(process.env.NODE_ENV)
-const CONN_STRING = process.env.DB_CONN_STRING;
-
-let db;
-
-async function connectToDb(cb) {
-    try {
-        const client = new MongoClient(CONN_STRING, { useUnifiedTopology: true } );
-        await client.connect();
-
-        db = client.db('movies');
-        console.log('DB connected');
-        CONN_STRING.indexOf('127.0.0.1') > -1 && console.log('--> Local DB');
-    } catch(e) {
-        console.error(e);
-    }
-    cb();
-}
-
-export {
-    db,
-    connectToDb
-};
+const dbconn = process.env.MONGODB_URI || 'mongodb://127.0.0.1/movies'
+export const db = mongoose
+  .connect(dbconn, {
+    useUnifiedTopology: true,
+  })
+  .then(x => console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`))
+  .catch(err => console.error(`Error connecting to mongo: ${err}`));

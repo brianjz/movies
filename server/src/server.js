@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { db, connectToDb } from './db.js';
+import { db } from './db.js';
 import  { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,8 +35,8 @@ app.use(function(err, req, res, next) {
 
 // --- SERVER ---
 const PORT = process.env.PORT || 8018;
-connectToDb(() => {
+// connectToDb(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
-});
+// });

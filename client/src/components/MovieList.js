@@ -6,12 +6,16 @@ import SearchTools from "./SearchTools";
 const StyledMovieList = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 const MovieList = (props) => {
     const { movies, add, getMovies } = props
     const existing = props.existing || []
-    const defaultSorting = props.defaultSorting || '-popularity'
+    const defaultSorting = props.defaultSorting || '-vote_average'
     const [searchTerm, setSearchTerm] = useState('')
     const [showClear, setShowClear] = useState(false)
     const [finalSearchTerm, setFinalSearchTerm] = useState('')

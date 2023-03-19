@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import HomePage, { loader as HomeLoader } from "./pages/HomePage";
 import AddMovie from "./pages/AddMovie";
-import MoviePage from "./pages/MoviePage";
+import MoviePage, { loader as MovieLoader } from "./pages/MoviePage";
 import App from "./App";
 
 const router = createBrowserRouter([
@@ -19,7 +19,8 @@ const router = createBrowserRouter([
         },
         {
             path: "movie/:movieId",
-            element: <MoviePage />
+            element: <MoviePage />,
+            loader: MovieLoader
         },
     
         ]

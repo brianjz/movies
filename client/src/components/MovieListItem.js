@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import styled from 'styled-components'
 import missingArt from '../images/missing.png'
+import { Link } from 'react-router-dom'
 
 const StyledMovie = styled.div`
     padding: 10px;
@@ -62,6 +63,7 @@ const MovieListItem = (props) => {
     const movieYear = movie.release_date ? new Date(movie.release_date).getFullYear() : ''
 
     let movieStatus = ''
+    let movieChosen = ''
     if(showAdd) {
         movieStatus = !inCollection ? <button data-id={movie.id} onClick={handleAddItem}>Add Item</button> : "In Collection"
     } else {
@@ -71,15 +73,16 @@ const MovieListItem = (props) => {
         } else {
             movieStatus += 'Never'
         }
+        movieChosen = 'Chosen By: ' + (movie.chosenBy || 'Nobody')
     }
 
     return (
         <StyledMovie>
             {movie.poster_path ? <img src={`https://image.tmdb.org/t/p/w92/${movie.poster_path}`} alt={movie.title} />
             : <img src={missingArt} alt="Missing Cover Art" height="138" width="110" />}
-            <h4>{movie.title}</h4>
+            <h4><Link to={`/movie/${movie.id}`} className="inline-link">{movie.title}</Link></h4>
             <div className="year">{movieYear}</div>
-            <div className="status">{movieStatus}</div>
+            <div className="status">{movieStatus}{movieChosen ? <span><br />{movieChosen}</span> : ''}</div>
         </StyledMovie>
     )
 }
