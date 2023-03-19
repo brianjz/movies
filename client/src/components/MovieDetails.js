@@ -14,17 +14,28 @@ const StyledImage = styled.img`
     margin: 0 20px;
     border: 1px solid black;
     height: 439px;
+
+    @media (max-width: 768px) {
+        height: auto;
+        margin: auto;
+        float: none;
+    }
 `;
 
 const StyledMovie = styled.div`
     background-image: ${(props) => (props.backdrop_path ? `url(https://image.tmdb.org/t/p/w780/${props.backdrop_path})` : "none")};
     background-repeat: no-repeat;
     background-position: right top;
-    margin-bottom: 1000px;
 
     .details-box {
         background-image: linear-gradient(to right, rgb(255, 255, 255) calc(-340px + 50vw), rgba(162, 162, 162, 0.84) 60%, rgba(255, 255, 255, 0.84) 100%);
         height: 439px;
+
+        @media (max-width: 768px) {
+            padding: 10px;
+            background-image: linear-gradient(to bottom, rgb(255, 255, 255) 0, rgba(162, 162, 162, 0.84) 60%, rgba(255, 255, 255, 0.99) 100%);
+            padding-bottom: 50px;
+        }
     }
 
     h2 {
@@ -32,6 +43,10 @@ const StyledMovie = styled.div`
         margin-bottom: 5px;
         span {
             font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            margin: 10px 0;
         }
     }
 

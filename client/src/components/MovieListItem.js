@@ -14,6 +14,9 @@ const StyledMovie = styled.div`
 
     h4 {
         margin: 0;
+        @media (max-width: 768px) {
+            padding-left: 107px;
+        }
     }
 
     .status {
@@ -78,7 +81,7 @@ const MovieListItem = (props) => {
 
     return (
         <StyledMovie>
-            {movie.poster_path ? <img src={`https://image.tmdb.org/t/p/w92/${movie.poster_path}`} alt={movie.title} />
+            {movie.poster_path ? <Link to={`/movie/${movie.id}`}><img src={`https://image.tmdb.org/t/p/w92/${movie.poster_path}`} alt={movie.title} /></Link>
             : <img src={missingArt} alt="Missing Cover Art" height="138" width="110" />}
             <h4><Link to={`/movie/${movie.id}`} className="inline-link">{movie.title}</Link></h4>
             <div className="year">{movieYear}</div>

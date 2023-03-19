@@ -107,7 +107,7 @@ const StyledSiteName = styled.div`
         font-size: 1.2rem;
     }
     @media (max-width:768px) {
-        margin-right: 5rem;
+        margin-right: 1rem;
     }
 `;
 
