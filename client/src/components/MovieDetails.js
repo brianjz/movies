@@ -115,11 +115,15 @@ const StyledMovie = styled.div`
     }
     .local-details {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 200px);
+        grid-template-columns: repeat(auto-fill, 250px);
         margin-top: 20px;
 
         .box-header {
             font-weight: 700;
+        }
+
+        @media (max-width:768px) {
+            grid-template-columns: 1fr;
         }
     }
 
@@ -131,6 +135,7 @@ const StyledMovie = styled.div`
 
 const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
     const movieYear = movie.release_date ? new Date(movie.release_date).getFullYear() : ''
+    const movieDateString = movie.lastWatched ? new Date(movie.lastWatched).toDateString() : "Never"
 
     return (
         <>
@@ -171,13 +176,19 @@ const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
                                 type={Types.TEXT}
                                 value={movie.chosenBy || "Nobody"}
                                 onSave={onChangeChosenBy}
-                                saveButtonLabel="Save"
                             />
                         </div>
                     </div>
                     <div>
                         <div className="box-header">Last Watched</div>
-                        <div className="box-details">{movie.lastWatched ? new Date(movie.lastWatched).toDateString() : "Never"}</div>
+                        <div className="box-details">
+                            <EasyEdit
+                                type="date"
+                                value={movieDateString || "Never"}
+                                onSave={onJustWatched}
+                            />
+                            {/* {movie.lastWatched ? new Date(movie.lastWatched).toDateString() : "Never"} */}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -7,15 +7,16 @@ const moviedb = new MovieDb('c208329e8399e97f9b5efb99b3be1313')
 const movieRouter = express.Router();
 const pageLength = 25;
 
-movieRouter.get('/:page(\\d+)?', async function(req, res) {
+// movieRouter.get('/:page(\\d+)?', async function(req, res) {
+movieRouter.get('/', async function(req, res) {
     const page = req.params.page;
-    console.log(`Called ==> /${page || ''}`);
+    console.log(`Called ==> /`);
     const sort = req.query.sort;
     const search = req.query.search;
-    let offset = 0;
-    if(page && page > 0) {
-        offset = pageLength * (page - 1);
-    }
+    // let offset = 0;
+    // if(page && page > 0) {
+    //     offset = pageLength * (page - 1);
+    // }
 
     let sortData = { title: 1 };
     if(sort) {
@@ -34,9 +35,7 @@ movieRouter.get('/:page(\\d+)?', async function(req, res) {
     let total = 0
     const records = Movie.find(
         searchQuery, null, { 
-            sort: sortData,
-            limit: pageLength,
-            skip: offset
+            sort: sortData
         }
     ).then(async (records) => {
         records.map((rec) => {

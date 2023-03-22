@@ -25,9 +25,10 @@ const MoviePage = () => {
         // console.log(updatedMovie)
     }
 
-    const handleJustWatched = async (e) => {
-        const nowDate = new Date()
-        const updatedMovie = {...movie, lastWatched: nowDate, watched: [...movie.watched, nowDate]}
+    const handleJustWatched = async (value) => {
+        const newDate = new Date(value + ' 12:00:00') || new Date()
+        console.log(value, newDate)
+        const updatedMovie = {...movie, lastWatched: newDate, watched: [...movie.watched, newDate]}
         await axios.post(`/api/movies/update/${movie._id}`, updatedMovie)
         console.log(updatedMovie)
     }

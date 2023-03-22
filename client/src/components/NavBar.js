@@ -104,6 +104,14 @@ const StyledSiteName = styled.div`
     margin-left: 20px;
     font-weight: 600;
     font-size: 1.3em;
+    display: flex;
+    
+    & :not(:last-child):after {
+        content: "|";
+        margin: 0 8px;
+        color: var(--slate)
+    }
+
 
     @media (max-width: 1080px) {
         margin-right: 1rem;
@@ -135,17 +143,17 @@ const NavBar = () => {
                 <div className="burger burger3"></div>
             </StyledBurger>
             <StyledSiteName dropMenuOpen={hamburgerOpen ? true : false }>
-                <Link className="inline-link" to="/">Movies</Link>
-            </StyledSiteName>
-            <StyledNav dropMenuOpen={hamburgerOpen ? true : false } onClick={toggleHamburger}>
-                <li>
-                    <EasyEdit
+                <div><Link className="inline-link" to="/">Movies</Link></div>
+                <EasyEdit
                         type={Types.TEXT}
                         value={whoAmI || "Who Are You?"}
                         onSave={handleUserSet}
                         saveButtonLabel="Save"
+                        hideSaveButton={true}
+                        hideCancelButton={true}
                     />
-                </li>
+            </StyledSiteName>
+            <StyledNav dropMenuOpen={hamburgerOpen ? true : false } onClick={toggleHamburger}>
                 <li><Link className="inline-link" to="/">Movie List</Link></li>
                 <li><Link className="inline-link" to="/movie/add">Add Movie</Link></li>
             </StyledNav>

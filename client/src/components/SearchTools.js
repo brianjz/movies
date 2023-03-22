@@ -53,6 +53,7 @@ const SearchTools = (props) => {
             {props.curSearchTerm && <StyledClearSearch onClick={props.onClearSearch}>+</StyledClearSearch>}
             <select onChange={props.onSortBy} value={props.curSort}>
                 <option value="-vote_average">Popularity</option>
+                <option value="-added">Added</option>
                 <option value="-release_date">Release Date</option>
                 <option value="title">Title</option>
                 {props.page && <option value="-lastWatched">Last Watched</option>}
