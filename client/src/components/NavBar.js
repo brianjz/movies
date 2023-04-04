@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import EasyEdit, {Types} from 'react-easy-edit';
+import { Modal } from './Modal';
 
 const StyledNavBar = styled.div`
     ${({ theme }) => theme.mixins.flexBetween};
@@ -122,18 +122,31 @@ const StyledSiteName = styled.div`
     }
 `;
 
-const handleUserSet = (value) => {
-    localStorage.setItem('moviesuser', value);
-}
+const StyledWhoButton = styled.button`
+    border: 0;
+    background-color: transparent;
+    font-size: 1.3rem;
+    font-weight: 500;
+    cursor: pointer;
+`;
 
 const NavBar = () => {
     const [hamburgerOpen, setHamburgerOpen] = useState(false);
+	const [shouldShowModal, setShouldShowModal] = useState(false);
+	const [whoAmI, setWhoAmI] = useState(localStorage.getItem('moviesuser'));
 
     const toggleHamburger = () => {
         setHamburgerOpen(!hamburgerOpen)
     }
 
-    const whoAmI = localStorage.getItem('moviesuser');
+    const handleUserSet = (e) => {
+        localStorage.setItem('moviesuser', whoAmI);
+        setShouldShowModal(false)
+    }
+
+    const handleUserChange = (e) => {
+        setWhoAmI(e.target.value)
+    }
 
     return (
         <StyledNavBar id="navBar">
@@ -144,19 +157,18 @@ const NavBar = () => {
             </StyledBurger>
             <StyledSiteName dropMenuOpen={hamburgerOpen ? true : false }>
                 <div><Link className="inline-link" to="/">Movies</Link></div>
-                <EasyEdit
-                        type={Types.TEXT}
-                        value={whoAmI || "Who Are You?"}
-                        onSave={handleUserSet}
-                        saveButtonLabel="Save"
-                        hideSaveButton={true}
-                        hideCancelButton={true}
-                    />
+                <StyledWhoButton onClick={() => setShouldShowModal(!shouldShowModal) }>
+                    {whoAmI || "Who Are You?"}
+                </StyledWhoButton>
             </StyledSiteName>
             <StyledNav dropMenuOpen={hamburgerOpen ? true : false } onClick={toggleHamburger}>
                 <li><Link className="inline-link" to="/">Movie List</Link></li>
                 <li><Link className="inline-link" to="/movie/add">Add Movie</Link></li>
             </StyledNav>
+            <Modal shouldShow={shouldShowModal}	onRequestClose={() => setShouldShowModal(false)}>
+			    <input type="text" placeholder="Your name" value={whoAmI || ''} onChange={handleUserChange} />
+                <button onClick={handleUserSet}>Set</button>
+            </Modal>
         </StyledNavBar>
     );
 }

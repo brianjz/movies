@@ -5,7 +5,9 @@ import missingArt from '../images/missing.png'
 import { Link } from 'react-router-dom'
 
 const StyledMovie = styled.div`
+    position: relative;
     padding: 10px;
+    border: ${(props) => (props.isSelected ? "1px solid red" : "none")};
 
     img {
         float: left;
@@ -35,6 +37,21 @@ const StyledMovie = styled.div`
         &:hover {
             color: black;
             background-color: var(--blue);
+        }
+    }
+
+    .remove {
+        font-size: 0.7em;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        opacity: 0.7;
+        
+        button {
+            border: 0;
+            color: red;
+            background-color: transparent;
+            cursor: pointer;
         }
     }
 `;
@@ -84,9 +101,10 @@ const MovieListItem = (props) => {
         <StyledMovie>
             {movie.poster_path ? <Link to={`/movie/${movie.id}`}><img src={`https://image.tmdb.org/t/p/w92/${movie.poster_path}`} alt={movie.title} /></Link>
             : <img src={missingArt} alt="Missing Cover Art" height="138" width="110" />}
-            <h4><Link to={`/movie/${movie.id}`} className="inline-link">{movie.title}</Link></h4>
+            <h4><Link to={`/movie/${movie.id}`} onClick={(e) => props.onMovieClick(e, movie.id)} className="inline-link">{movie.title}</Link></h4>
             <div className="year">{movieYear}</div>
             <div className="status">{movieStatus}{movieChosen ? <span><br />{movieChosen}</span> : ''}</div>
+            <div className="remove"><button onClick={(e) => props.onDelete(e, movie.id)}>Remove</button></div>
         </StyledMovie>
     )
 }

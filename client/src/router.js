@@ -14,17 +14,17 @@ const router = createBrowserRouter([
             loader: HomeLoader
         },
         {
-            path: "movie/add",
+            path: "/movie/add",
             element: <AddMovie />
         },
         {
-            path: "movie/:movieId",
+            path: "/movie/:movieId",
             element: <MoviePage />,
             loader: MovieLoader
         },
     
         ]
     },
-]);
+], { basename: "/movies" });
 
 export default router;

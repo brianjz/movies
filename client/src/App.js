@@ -3,6 +3,7 @@ import theme from './styles/theme'
 import GlobalStyle from './styles/GlobalStyles'
 import { Outlet } from 'react-router';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <div className="main">
         <Outlet />
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }

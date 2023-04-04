@@ -2,15 +2,17 @@ import axios from 'axios'
 import { useLoaderData } from 'react-router'
 import MovieList from '../components/MovieList'
 
-export async function loader(searchTerm = '') {
+export async function loader({ searchTerm = '', sort = '' }) {
     let movies = []
-    await axios.get(`/api/movies?search=${searchTerm}`)
-    .then((response)=>{
-        movies =  response.data.movies
-    })
-    .catch((error) => {
-        console.log(error)
-    })
+    const url = searchTerm || sort ? `/api/movies?search=${searchTerm}&sort=${sort}` : '/api/movies'
+    console.log('getMovies: ', url)
+    await axios.get(url)
+        .then((response)=>{
+            movies =  response.data.movies
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 
     return movies;
 }

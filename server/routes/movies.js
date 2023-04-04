@@ -20,13 +20,11 @@ movieRouter.get('/', async function(req, res) {
 
     let sortData = { title: 1 };
     if(sort) {
+        const sortField = sort[0] === '-' ? sort.substring(1) : sort;
         sortData = {};
-        sortData[sort] = 1;
-        if(req.query.direction) {
-            sortData[sort] = req.query.direction;
-        }
-        if(sort != 'date') {
-            sortData['date'] = 1;
+        sortData[sortField] = 1;
+        if(sort[0] == '-') {
+            sortData[sortField] = -1;
         }
     }
     // console.log(sortData);
@@ -112,13 +110,21 @@ movieRouter.put('/addMovie', async (req, res) => {
     }
 });
 
-movieRouter.post('/update/:id', (req, res) => {
+movieRouter.patch('/update/:id', (req, res) => {
     console.log('Called ==> /update/' + req.params.id);
 
     Movie.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then(updatedMovie => res.status(200).json({ successMessage: 'Updated Successfully!', movie: updatedMovie }))
       .catch(err => res.json({ failureMessage: 'Failed to update movie.', error: err }));
-  });
+});
+
+movieRouter.delete('/delete/:id', (req, res) => {
+    console.log('Called ==> /delete/' + req.params.id);
+
+    Movie.deleteOne({ id: parseInt(req.params.id)})
+        .then((delres) => res.status(200).send({deleted: delres}))
+        .catch(err => res.json({ failureMessage: 'Failed to delete movie.', error: err }));
+});
   
 
 

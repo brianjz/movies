@@ -4,7 +4,7 @@ import { css } from 'styled-components';
     @media (max-width: 768px) {
       display: flex;
     }
-    a, input {
+    a, input, button {
         display: block;
         background-color: var(--secondary);
         padding: 20px;

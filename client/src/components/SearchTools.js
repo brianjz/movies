@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const StyledSearch = styled.form`
     display: grid;
-    grid-template-columns: 300px 300px max-content;
+    grid-template-columns: 300px 100px 300px max-content;
     gap: 10px;
     position: relative;
 
@@ -14,7 +14,7 @@ const StyledSearch = styled.form`
         font-size: 1.1rem;
     }
 
-    input[type=submit] {
+    input[type=submit], button {
         background-color: var(--lower-blue);
         border: none;
         color: white;
@@ -48,9 +48,11 @@ const StyledClearSearch = styled.div`
 
 const SearchTools = (props) => {
     return (
+        <>
         <StyledSearch onSubmit={props.onSearchSubmit}>
-            <input type="text" id="searchBox" name="searchBox" value={props.curSearchTerm} placeholder="Search for movie" onChange={props.onSearchChange}/>
+            <input type="text" id="searchBox" name="searchBox" value={props.curSearchTerm} placeholder={props.page === "HomePage" ? `Filter our movies` : `Search for movie`} onChange={props.onSearchChange}/>
             {props.curSearchTerm && <StyledClearSearch onClick={props.onClearSearch}>+</StyledClearSearch>}
+            <input type="submit" value={props.page === "HomePage" ? "Filter" : "Search"} />
             <select onChange={props.onSortBy} value={props.curSort}>
                 <option value="-vote_average">Popularity</option>
                 <option value="-added">Added</option>
@@ -58,8 +60,11 @@ const SearchTools = (props) => {
                 <option value="title">Title</option>
                 {props.page && <option value="-lastWatched">Last Watched</option>}
             </select>
-            <input type="submit" value={props.page ? "Filter" : "Search"} />
+            {props.page === "HomePage" &&
+                <button onClick={props.onHideWatched}>{props.curHideWatched ? "Show Watched" : "Hide Watched"}</button>
+            }
         </StyledSearch>
+        </>
     )
 }
 

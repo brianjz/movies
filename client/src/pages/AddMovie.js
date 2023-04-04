@@ -7,23 +7,29 @@ const AddMovie = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [existingMovies, setExistingMovies] = useState([])
 
-    async function getMovies(newSearchTerm) {
+    async function getMovies(newSearchTermItem) {
+        const newSearchTerm = newSearchTermItem.searchTerm || ''
         if(searchTerm !== newSearchTerm) {
-            const escST = newSearchTerm.replace(' ', '+')
-            setSearchTerm(newSearchTerm)
-            return new Promise((resolve, reject) => {
-                axios.get(`/api/movies/find/${escST}`)
-                .then((response)=>{
-                    setExistingMovies(response.data.existing)
-                    resolve(response.data.results);
+            if(newSearchTerm === '') {
+                setExistingMovies([]);
+                setSearchTerm('');
+            } else {
+                const escST = newSearchTerm.replace(' ', '+')
+                setSearchTerm(newSearchTerm)
+                return new Promise((resolve, reject) => {
+                    axios.get(`/api/movies/find/${escST}`)
+                    .then((response)=>{
+                        setExistingMovies(response.data.existing)
+                        resolve(response.data.results);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        reject(error)
+                    })
                 })
-                .catch((error) => {
-                    console.log(error)
-                    reject(error)
-                })
-            })
-            //-- testing
-            // return findData.results
+                //-- testing
+                // return findData.results
+            }
         }
     }
 
@@ -36,6 +42,7 @@ const AddMovie = () => {
                 add={true} 
                 existing={existingMovies} 
                 getMovies={getMovies}
+                page="AddMovies"
             />
         </div>
         </>

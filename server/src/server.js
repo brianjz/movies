@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { db } from './db.js';
 import  { fileURLToPath } from 'url';
+import config from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,9 +35,7 @@ app.use(function(err, req, res, next) {
 });
 
 // --- SERVER ---
-const PORT = process.env.PORT || 8018;
-// connectToDb(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-// });
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

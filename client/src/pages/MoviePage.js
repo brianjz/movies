@@ -18,23 +18,8 @@ export async function loader({ params }) {
 const MoviePage = () => {
     const movie = useLoaderData()
 
-    const handleChosenByUpdate = async (value) => {
-        const updatedMovie = {...movie, chosenBy: value}
-        console.log('Calling', `/api/movies/update/${movie._id}`)
-        await axios.post(`/api/movies/update/${movie._id}`, updatedMovie)
-        // console.log(updatedMovie)
-    }
-
-    const handleJustWatched = async (value) => {
-        const newDate = new Date(value + ' 12:00:00') || new Date()
-        console.log(value, newDate)
-        const updatedMovie = {...movie, lastWatched: newDate, watched: [...movie.watched, newDate]}
-        await axios.post(`/api/movies/update/${movie._id}`, updatedMovie)
-        console.log(updatedMovie)
-    }
-
     return (
-        <MovieDetails movie={movie} onChangeChosenBy={handleChosenByUpdate} onJustWatched={handleJustWatched} />
+        <MovieDetails movie={movie} />
     )
 }
 

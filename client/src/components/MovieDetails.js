@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import EasyEdit, {Types} from 'react-easy-edit';
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 const convertMinutes = (minutes) => {
     const hours = Math.floor(minutes / 60);
@@ -9,16 +11,23 @@ const convertMinutes = (minutes) => {
     return `${hours}h ${remainingMinutes}m`;
 }
 
-const StyledImage = styled.img`
-    float: left;
-    margin: 0 20px;
-    border: 1px solid black;
-    height: 439px;
+const StyledImage = styled.div`
+    @media (max-width:768px) {
+        text-align: center;
+    }
 
-    @media (max-width: 768px) {
-        height: auto;
-        margin: auto;
-        float: none;
+    img {
+        float: left;
+        margin: 0 20px;
+        border: 1px solid black;
+        height: 439px;
+
+        @media (max-width: 768px) {
+            height: auto;
+            margin: auto;
+            width: 60%;
+            float: none;
+        }
     }
 `;
 
@@ -27,14 +36,19 @@ const StyledMovie = styled.div`
     background-repeat: no-repeat;
     background-position: right top;
 
+    @media (max-width:768px) {
+        font-size: 1rem;
+        background: none;
+    }
+
     .details-box {
         background-image: linear-gradient(to right, rgb(255, 255, 255) calc(-340px + 50vw), rgba(162, 162, 162, 0.84) 60%, rgba(255, 255, 255, 0.84) 100%);
         height: 439px;
 
         @media (max-width: 768px) {
             padding: 10px;
-            background-image: linear-gradient(to bottom, rgb(255, 255, 255) 0, rgba(162, 162, 162, 0.84) 60%, rgba(255, 255, 255, 0.99) 100%);
-            padding-bottom: 50px;
+            background: none;
+            height: auto;
         }
     }
 
@@ -134,12 +148,30 @@ const StyledMovie = styled.div`
 `;
 
 const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
+    const [lastWatched, setLastWatched] = useState(movie.lastWatched)
+
+    const handleChosenByUpdate = async (value) => {
+        const updatedMovie = {...movie, chosenBy: value}
+        // console.log('Calling', `/api/movies/update/${movie._id}`)
+        await axios.patch(`/api/movies/update/${movie._id}`, updatedMovie)
+    }
+
+    const handleJustWatched = async (value) => {
+        const newDate = value ? new Date(value + ' 12:00:00') : new Date()
+        // console.log(value, newDate)
+        const updatedMovie = {...movie, lastWatched: newDate, watched: [...movie.watched, newDate]}
+        setLastWatched(newDate)
+        await axios.patch(`/api/movies/update/${movie._id}`, updatedMovie)
+    }
+
     const movieYear = movie.release_date ? new Date(movie.release_date).getFullYear() : ''
-    const movieDateString = movie.lastWatched ? new Date(movie.lastWatched).toDateString() : "Never"
+    const movieDateString = lastWatched ? new Date(lastWatched).toDateString() : "Never"
 
     return (
         <>
-        {movie.poster_path && <StyledImage src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`} alt={movie.title} />}
+        <StyledImage>
+            {movie.poster_path && <img src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`} alt={movie.title} />}
+        </StyledImage>
         <StyledMovie backdrop_path={movie.backdrop_path}>
             <div className="details-box">
                 <h2>{movie.title}{movieYear ? <span className="year"> ({movieYear})</span>: ''}</h2>
@@ -165,7 +197,7 @@ const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
                     </div>
                     }
                     <div className="just-watched">
-                        <Link onClick={onJustWatched} to={`/movie/${movie.id}`}>Just Watched It</Link>
+                        <Link onClick={(e) => {e.preventDefault(); handleJustWatched()}} to={`/movie/${movie.id}`}>Just Watched It</Link>
                     </div>
                 </div>
                 <div className="local-details">
@@ -175,7 +207,7 @@ const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
                             <EasyEdit
                                 type={Types.TEXT}
                                 value={movie.chosenBy || "Nobody"}
-                                onSave={onChangeChosenBy}
+                                onSave={handleChosenByUpdate}
                             />
                         </div>
                     </div>
@@ -185,7 +217,7 @@ const MovieDetails = ({ movie, onChangeChosenBy, onJustWatched }) => {
                             <EasyEdit
                                 type="date"
                                 value={movieDateString || "Never"}
-                                onSave={onJustWatched}
+                                onSave={handleJustWatched}
                             />
                             {/* {movie.lastWatched ? new Date(movie.lastWatched).toDateString() : "Never"} */}
                         </div>
