@@ -3,7 +3,7 @@ import { MovieDb } from 'moviedb-promise'
 
 import Movie from '../models/Movie.model.js';
 
-const moviedb = new MovieDb('c208329e8399e97f9b5efb99b3be1313')
+const moviedb = new MovieDb('TMDB Key')
 const movieRouter = express.Router();
 const pageLength = 25;
 
